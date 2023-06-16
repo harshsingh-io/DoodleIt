@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Doodle It</string>
+    <string name="large_button">large button</string>
+    <string name="medium_button">medium button</string>
+    <string name="small_button">small button</string>
 </resources>

@@ -12,7 +12,8 @@
         app:layout_constraintBottom_toTopOf="@+id/ib_medium_brush"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/small_button" />
 
     <ImageView
         android:id="@+id/ib_medium_brush"
@@ -22,7 +23,8 @@
         app:layout_constraintBottom_toTopOf="@+id/ib_large_brush"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ib_small_brush" />
+        app:layout_constraintTop_toBottomOf="@+id/ib_small_brush"
+        android:contentDescription="@string/medium_button" />
 
     <ImageView
         android:id="@+id/ib_large_brush"
@@ -33,5 +35,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ib_medium_brush"
-         />
+        android:contentDescription="@string/large_button" />
 </androidx.constraintlayout.widget.ConstraintLayout>
