@@ -55,7 +55,6 @@
                 android:src="@drawable/pallete_normal"
                 android:tag="@color/peach" />
 
-
             <ImageButton
                 android:layout_width="25dp"
                 android:layout_height="25dp"
@@ -65,7 +64,6 @@
                 android:onClick="paintClicked"
                 android:src="@drawable/pallete_normal"
                 android:tag="@color/purple_200" />
-
 
             <ImageButton
                 android:layout_width="25dp"
@@ -86,7 +84,6 @@
                 android:onClick="paintClicked"
                 android:src="@drawable/pallete_normal"
                 android:tag="@color/pink" />
-
 
             <ImageButton
                 android:layout_width="25dp"
@@ -121,11 +118,19 @@
 
         </LinearLayout>
 
+
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_gravity="center"-->
+        <!--            android:orientation="horizontal">-->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
+            android:background="@drawable/layout_curve"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="1dp">
 
             <ImageButton
                 android:id="@+id/galleryButton"
@@ -134,13 +139,11 @@
                 android:cropToPadding="false"
                 android:src="@drawable/gallery_add_svgrepo_com" />
 
-
             <ImageButton
                 android:id="@+id/ib_brush"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/paintbrush" />
-
 
             <ImageButton
                 android:id="@+id/undoButton"
@@ -155,25 +158,32 @@
                 android:layout_height="50dp"
                 android:src="@drawable/save_svgrepo_com" />
 
-            <Button
-                android:id="@+id/pick_color_button"
+            <!--            <ImageButton-->
+            <!--                android:id="@+id/pick_color_button"-->
+            <!--                android:layout_width="50dp"-->
+            <!--                android:layout_height="50dp"-->
+            <!--                android:src="@android:drawable/ic_menu_edit" />-->
+            <ImageButton
+                android:id="@+id/color_picker_button"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@android:drawable/ic_menu_edit" />
-
-            <Button
-                android:id="@+id/set_color_button"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@android:drawable/ic_popup_sync" />
+                android:src="@drawable/save_svgrepo_com"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <View
-                android:id="@+id/preview_selected_color"
+                android:id="@+id/color_preview"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_gravity="center"
                 android:background="@android:color/darker_gray"
-                android:clickable="false" />
+                android:clickable="false"
+                app:layout_constraintEnd_toStartOf="@+id/color_picker_button"
+                app:layout_constraintStart_toEndOf="@+id/ib_brush"
+                app:layout_constraintTop_toTopOf="@+id/ib_brush" />
+
         </LinearLayout>
 
     </LinearLayout>
