@@ -1,5 +1,6 @@
 package kt.harshsingh.doodleit
 
+import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
 import android.graphics.Color
@@ -9,8 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.recyclerview.widget.GridLayoutManager
@@ -22,7 +27,30 @@ class MainActivity : AppCompatActivity() {
     private lateinit var colorPickerDialog: AlertDialog
     private lateinit var preview: View
 
+    val requestPermission: ActivityResultLauncher<Array<String>> =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){
+            permissions->
+            permissions.entries.forEach{
+                val permissionName = it.key
+                val isGranted = it.value
 
+                if (isGranted) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Permission granted now you can read the storage files.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else{
+                    if (permissionName == Manifest.permission.READ_EXTERNAL_STORAGE){
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Permission denied now you can't read the storage files.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+        }
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
@@ -42,6 +70,11 @@ class MainActivity : AppCompatActivity() {
         preview = findViewById(R.id.color_preview)
         val colorPickerButton: ImageButton = findViewById(R.id.color_picker_button)
         colorPickerButton.setOnClickListener { showColorPickerDialog() }
+
+        val ibGallery: ImageButton = findViewById(R.id.galleryButton)
+        ibGallery.setOnClickListener {
+            requestStoragePermission()
+        }
 
     }
 
@@ -81,12 +114,25 @@ class MainActivity : AppCompatActivity() {
             mImageButtonCurrentPaint = view
         }
     }
+
     private fun showColorPickerDialog() {
 
         val colors = listOf(
-            Color.CYAN, Color.rgb(179, 157, 219), Color.MAGENTA, Color.rgb(245, 245, 220), Color.YELLOW,
-            Color.rgb(169, 169, 169), Color.GREEN, Color.rgb(244, 164, 96), Color.BLUE, Color.RED,
-            Color.rgb(255, 228, 181), Color.rgb(72, 61, 139), Color.rgb(205, 92, 92), Color.rgb(255, 165, 0), Color.rgb(102, 205, 170)
+            Color.CYAN,
+            Color.rgb(179, 157, 219),
+            Color.MAGENTA,
+            Color.rgb(245, 245, 220),
+            Color.YELLOW,
+            Color.rgb(169, 169, 169),
+            Color.GREEN,
+            Color.rgb(244, 164, 96),
+            Color.BLUE,
+            Color.RED,
+            Color.rgb(255, 228, 181),
+            Color.rgb(72, 61, 139),
+            Color.rgb(205, 92, 92),
+            Color.rgb(255, 165, 0),
+            Color.rgb(102, 205, 170)
         )
 
         val numColumns = 5 // Desired number of columns
@@ -126,6 +172,7 @@ class MainActivity : AppCompatActivity() {
             .create()
         colorPickerDialog.show()
     }
+
     private fun convertColorToString(color: Int): String {
         val red = Color.red(color)
         val green = Color.green(color)
@@ -135,5 +182,31 @@ class MainActivity : AppCompatActivity() {
 
     private fun dpToPx(dp: Int): Int {
         return (dp * resources.displayMetrics.density).toInt()
+    }
+    private fun requestStoragePermission(){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE,)
+        ){
+            showRationaleDialog("Doodle It","Kid Drawing App " + "Needs to Access Your External Storage")
+
+        } else {
+            requestPermission.launch(arrayOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE
+                // TODO - Add writing external storage permission
+            ))
+        }
+    }
+    private fun showRationaleDialog(
+        title: String,
+        message: String,
+    ) {
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Cancel"){dialog, _->
+                dialog.dismiss()
+            }
+        builder.create().show()
     }
 }
