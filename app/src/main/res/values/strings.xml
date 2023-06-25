@@ -3,4 +3,6 @@
     <string name="large_button">large button</string>
     <string name="medium_button">medium button</string>
     <string name="small_button">small button</string>
+    <string name="background_image">Background Image</string>
+    <string name="red_color">Red Color</string>
 </resources>

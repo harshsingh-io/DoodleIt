@@ -6,17 +6,33 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <kt.harshsingh.doodleit.DrawingView
-        android:id="@+id/drawing_view"
+    <FrameLayout
+        android:id="@+id/fl_drawing_view_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
         android:background="@drawable/background_drawing_view_layout"
+        android:padding="1dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/iv_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/background_image"
+            android:scaleType="centerCrop"
+            android:src="@drawable/image" />
+
+        <kt.harshsingh.doodleit.DrawingView
+            android:id="@+id/drawing_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#80FFFFFF" />
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -25,17 +41,14 @@
         android:background="@drawable/layout_curve"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="1dp">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
             android:id="@+id/ll_paint_colors"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/layout_curve"
-            android:orientation="horizontal"
-            app:layout_constraintBaseline_toTopOf="@id/ib_brush"
-            app:layout_constraintBottom_toBottomOf="@id/drawing_view">
+            android:orientation="horizontal">
 
             <ImageButton
                 android:layout_width="25dp"
@@ -44,7 +57,8 @@
                 android:background="@color/red"
                 android:onClick="paintClicked"
                 android:src="@drawable/pallete_normal"
-                android:tag="@color/red" />
+                android:tag="@color/red"
+                android:contentDescription="@string/red_color" />
 
             <ImageButton
                 android:layout_width="25dp"
@@ -118,19 +132,12 @@
 
         </LinearLayout>
 
-
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_gravity="center"-->
-        <!--            android:orientation="horizontal">-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/layout_curve"
             android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:layout_editor_absoluteX="1dp">
+            android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/galleryButton"
@@ -145,24 +152,19 @@
                 android:layout_height="50dp"
                 android:src="@drawable/paintbrush" />
 
-            <ImageButton
-                android:id="@+id/undoButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/undo_small_svgrepo_com" />
+<!--            <ImageButton-->
+<!--                android:id="@+id/undoButton"-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:src="@drawable/undo_small_svgrepo_com" />-->
 
 
-            <ImageButton
-                android:id="@+id/saveButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/save_svgrepo_com" />
+<!--            <ImageButton-->
+<!--                android:id="@+id/saveButton"-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:src="@drawable/save_svgrepo_com" />-->
 
-            <!--            <ImageButton-->
-            <!--                android:id="@+id/pick_color_button"-->
-            <!--                android:layout_width="50dp"-->
-            <!--                android:layout_height="50dp"-->
-            <!--                android:src="@android:drawable/ic_menu_edit" />-->
             <ImageButton
                 android:id="@+id/color_picker_button"
                 android:layout_width="50dp"

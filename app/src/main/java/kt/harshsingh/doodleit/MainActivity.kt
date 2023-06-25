@@ -3,12 +3,15 @@ package kt.harshsingh.doodleit
 import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -27,10 +30,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var colorPickerDialog: AlertDialog
     private lateinit var preview: View
 
+    val openGalleryLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            result ->
+            if (result.resultCode == RESULT_OK && result.data!=null){
+                val imageBackGround: ImageView = findViewById(R.id.iv_background)
+                imageBackGround.setImageURI(result.data?.data)
+            }
+        }
+
     val requestPermission: ActivityResultLauncher<Array<String>> =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){
-            permissions->
-            permissions.entries.forEach{
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            permissions.entries.forEach {
                 val permissionName = it.key
                 val isGranted = it.value
 
@@ -40,8 +51,13 @@ class MainActivity : AppCompatActivity() {
                         "Permission granted now you can read the storage files.",
                         Toast.LENGTH_LONG
                     ).show()
-                } else{
-                    if (permissionName == Manifest.permission.READ_EXTERNAL_STORAGE){
+                    val pickPhotoIntent = Intent(
+                        Intent.ACTION_PICK,
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    )
+                    openGalleryLauncher.launch(pickPhotoIntent)
+                } else {
+                    if (permissionName == Manifest.permission.READ_EXTERNAL_STORAGE) {
                         Toast.makeText(
                             this@MainActivity,
                             "Permission denied now you can't read the storage files.",
@@ -51,6 +67,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
@@ -183,20 +200,28 @@ class MainActivity : AppCompatActivity() {
     private fun dpToPx(dp: Int): Int {
         return (dp * resources.displayMetrics.density).toInt()
     }
-    private fun requestStoragePermission(){
+
+    private fun requestStoragePermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
-                Manifest.permission.READ_EXTERNAL_STORAGE,)
-        ){
-            showRationaleDialog("Doodle It","Kid Drawing App " + "Needs to Access Your External Storage")
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+            )
+        ) {
+            showRationaleDialog(
+                "Doodle It",
+                "Kid Drawing App " + "Needs to Access Your External Storage"
+            )
 
         } else {
-            requestPermission.launch(arrayOf(
-                Manifest.permission.READ_EXTERNAL_STORAGE
-                // TODO - Add writing external storage permission
-            ))
+            requestPermission.launch(
+                arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                    // TODO - Add writing external storage permission
+                )
+            )
         }
     }
+
     private fun showRationaleDialog(
         title: String,
         message: String,
@@ -204,9 +229,14 @@ class MainActivity : AppCompatActivity() {
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setTitle(title)
             .setMessage(message)
-            .setPositiveButton("Cancel"){dialog, _->
+            .setPositiveButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
             }
         builder.create().show()
+    }
+
+    companion object {
+        private const val STORAGE_PERMISSION_CODE = 1
+        private const val GALLERY = 2
     }
 }
