@@ -3,15 +3,12 @@ package kt.harshsingh.doodleit
 import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -30,14 +27,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var colorPickerDialog: AlertDialog
     private lateinit var preview: View
 
-    val openGalleryLauncher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            result ->
-            if (result.resultCode == RESULT_OK && result.data!=null){
-                val imageBackGround: ImageView = findViewById(R.id.iv_background)
-                imageBackGround.setImageURI(result.data?.data)
-            }
-        }
+//    val openGalleryLauncher: ActivityResultLauncher<Intent> =
+//        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+//            result ->
+//            if (result.resultCode == RESULT_OK && result.data!=null){
+//                val imageBackGround: ImageView = findViewById(R.id.iv_background)
+//                imageBackGround.setImageURI(result.data?.data)
+//            }
+//        }
 
     val requestPermission: ActivityResultLauncher<Array<String>> =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -51,11 +48,11 @@ class MainActivity : AppCompatActivity() {
                         "Permission granted now you can read the storage files.",
                         Toast.LENGTH_LONG
                     ).show()
-                    val pickPhotoIntent = Intent(
-                        Intent.ACTION_PICK,
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                    )
-                    openGalleryLauncher.launch(pickPhotoIntent)
+//                    val pickPhotoIntent = Intent(
+//                        Intent.ACTION_PICK,
+//                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+//                    )
+//                    openGalleryLauncher.launch(pickPhotoIntent)
                 } else {
                     if (permissionName == Manifest.permission.READ_EXTERNAL_STORAGE) {
                         Toast.makeText(
@@ -88,9 +85,14 @@ class MainActivity : AppCompatActivity() {
         val colorPickerButton: ImageButton = findViewById(R.id.color_picker_button)
         colorPickerButton.setOnClickListener { showColorPickerDialog() }
 
-        val ibGallery: ImageButton = findViewById(R.id.galleryButton)
-        ibGallery.setOnClickListener {
-            requestStoragePermission()
+//        val ibGallery: ImageButton = findViewById(R.id.galleryButton)
+//        ibGallery.setOnClickListener {
+//            requestStoragePermission()
+//        }
+
+        val ibUndo : ImageButton = findViewById(R.id.undoButton)
+        ibUndo.setOnClickListener{
+            drawingView?.onClickUndo()
         }
 
     }
@@ -233,10 +235,5 @@ class MainActivity : AppCompatActivity() {
                 dialog.dismiss()
             }
         builder.create().show()
-    }
-
-    companion object {
-        private const val STORAGE_PERMISSION_CODE = 1
-        private const val GALLERY = 2
     }
 }

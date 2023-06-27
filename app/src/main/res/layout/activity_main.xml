@@ -6,33 +6,42 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <FrameLayout
-        android:id="@+id/fl_drawing_view_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="5dp"
-        android:background="@drawable/background_drawing_view_layout"
-        android:padding="1dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+<!--    <FrameLayout-->
+<!--        android:id="@+id/fl_drawing_view_container"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_margin="5dp"-->
+<!--        android:background="@drawable/background_drawing_view_layout"-->
+<!--        android:padding="1dp"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
 
-        <ImageView
-            android:id="@+id/iv_background"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/background_image"
-            android:scaleType="centerCrop"
-            android:src="@drawable/image" />
+<!--        <ImageView-->
+<!--            android:id="@+id/iv_background"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:contentDescription="@string/background_image"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:src="@drawable/background_drawing_view_layout"-->
+<!--            />-->
 
         <kt.harshsingh.doodleit.DrawingView
             android:id="@+id/drawing_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="#80FFFFFF" />
+            android:background="#80FFFFFF"
+            android:padding="1dp"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" >
 
-    </FrameLayout>
+        </kt.harshsingh.doodleit.DrawingView>
+<!--            android:background="@drawable/background_drawing_view_layout"/>-->
+
+<!--    </FrameLayout>-->
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -152,18 +161,18 @@
                 android:layout_height="50dp"
                 android:src="@drawable/paintbrush" />
 
-<!--            <ImageButton-->
-<!--                android:id="@+id/undoButton"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:src="@drawable/undo_small_svgrepo_com" />-->
+            <ImageButton
+                android:id="@+id/undoButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/undo_small_svgrepo_com" />
 
 
-<!--            <ImageButton-->
-<!--                android:id="@+id/saveButton"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:src="@drawable/save_svgrepo_com" />-->
+            <ImageButton
+                android:id="@+id/saveButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/save_svgrepo_com" />
 
             <ImageButton
                 android:id="@+id/color_picker_button"
