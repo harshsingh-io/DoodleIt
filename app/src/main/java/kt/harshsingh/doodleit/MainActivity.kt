@@ -3,6 +3,9 @@ package kt.harshsingh.doodleit
 import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -20,6 +23,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity() {
     private var drawingView: DrawingView? = null
@@ -90,11 +100,21 @@ class MainActivity : AppCompatActivity() {
 //            requestStoragePermission()
 //        }
 
-        val ibUndo : ImageButton = findViewById(R.id.undoButton)
-        ibUndo.setOnClickListener{
+        val ibUndo: ImageButton = findViewById(R.id.undoButton)
+        ibUndo.setOnClickListener {
             drawingView?.onClickUndo()
         }
 
+        val ibSave : ImageButton = findViewById(R.id.saveButton)
+        ibSave.setOnClickListener{
+            if (isReadStorageAllowed()){
+                GlobalScope.launch{
+                    val drawinView : View = findViewById(R.id.drawing_view)
+                    val myBitmap : Bitmap = getBitmapFromView(drawinView)
+                    saveBitmapFile(myBitmap)
+                }
+            }
+        }
     }
 
     private fun showBrushSizeChooserDialog() {
@@ -203,6 +223,11 @@ class MainActivity : AppCompatActivity() {
         return (dp * resources.displayMetrics.density).toInt()
     }
 
+    private fun isReadStorageAllowed(): Boolean {
+        val result = ContextCompat.checkSelfPermission(this,
+        Manifest.permission.READ_EXTERNAL_STORAGE)
+        return result == PackageManager.PERMISSION_GRANTED
+    }
     private fun requestStoragePermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
@@ -217,7 +242,8 @@ class MainActivity : AppCompatActivity() {
         } else {
             requestPermission.launch(
                 arrayOf(
-                    Manifest.permission.READ_EXTERNAL_STORAGE
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
                     // TODO - Add writing external storage permission
                 )
             )
@@ -236,4 +262,58 @@ class MainActivity : AppCompatActivity() {
             }
         builder.create().show()
     }
+
+    private fun getBitmapFromView(view: View): Bitmap {
+        val returnedBitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(returnedBitmap)
+        val bgDrawable = view.background
+        if (bgDrawable != null){
+            bgDrawable.draw(canvas)
+        } else{
+            canvas.drawColor(Color.WHITE)
+        }
+
+        view.draw(canvas)
+        return returnedBitmap
+    }
+    private suspend fun saveBitmapFile(mBitmap: Bitmap?):String {
+        var result = ""
+        withContext(Dispatchers.IO){
+            if (mBitmap!=null){
+                try {
+                    val bytes = ByteArrayOutputStream()
+                    mBitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes)
+
+                    val f = File(externalCacheDir?.absoluteFile.toString() + File.separator +
+                            "DoodleIt_" + System.currentTimeMillis()/1000 + ".png")
+                    val fo = FileOutputStream(f)
+                    fo.write(bytes.toByteArray())
+                    fo.close()
+                    result = f.absolutePath
+                    runOnUiThread{
+                        if(result.isNotEmpty()){
+                            Toast.makeText(this@MainActivity, "File saved successfully :$result",Toast.LENGTH_SHORT).show()
+                        }else{
+                            Toast.makeText(this@MainActivity, "Something went wrong while saving " +
+                                    "the file!",
+                                Toast
+                                .LENGTH_SHORT)
+                                .show()
+
+                        }
+                    }
+                } catch (e: Exception){
+                    result = ""
+                    e.printStackTrace()
+                }
+            }
+        }
+        return result
+    }
+
+    companion object {
+        private const val STORAGE_PERMISSION_CODE = 1
+        private const val GALLERY = 2
+    }
 }
+
