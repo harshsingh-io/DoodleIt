@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -21,10 +22,10 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
@@ -107,11 +108,12 @@ class MainActivity : AppCompatActivity() {
 
         val ibSave : ImageButton = findViewById(R.id.saveButton)
         ibSave.setOnClickListener{
+            requestStoragePermission()
             if (isReadStorageAllowed()){
-                GlobalScope.launch{
-                    val drawinView : View = findViewById(R.id.drawing_view)
-                    val myBitmap : Bitmap = getBitmapFromView(drawinView)
-                    saveBitmapFile(myBitmap)
+                lifecycleScope.launch{
+                    val flDrawingView : FrameLayout = findViewById(R.id.fl_drawing_view_container)
+//                    val myBitmap : Bitmap = getBitmapFromView(drawinView)
+                    saveBitmapFile(getBitmapFromView(flDrawingView))
                 }
             }
         }
@@ -285,7 +287,7 @@ class MainActivity : AppCompatActivity() {
                     mBitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes)
 
                     val f = File(externalCacheDir?.absoluteFile.toString() + File.separator +
-                            "DoodleIt_" + System.currentTimeMillis()/1000 + ".png")
+                            "DoodleIt_" + System.currentTimeMillis() /1000 + ".png")
                     val fo = FileOutputStream(f)
                     fo.write(bytes.toByteArray())
                     fo.close()
